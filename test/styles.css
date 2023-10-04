@@ -1,0 +1,70 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: blueviolet;
+    color: white;
+}
+
+.tetris {
+    margin: 0 auto;
+    background-color: black;
+    width: 700px;
+    height: 800px;
+    text-align: center;    
+}
+
+h1 {
+    color: #FFF;
+    font-size: 50px;
+} 
+
+.game {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.field {
+    /* margin: 0% 5% 20% 20%; */
+    height: 600px;
+    width: 300px;
+    background-color: yellow;
+
+}
+
+.stat {
+    height: 300px;
+    width: 100%;
+    background-color: red;
+}
+
+.next_figure {
+    height: 120px;
+    width: 150px;
+    margin-top: 20%;
+    background-color: white;
+}
+
+.stat_inner {
+    margin-left: 10%;
+    margin-top: 0%;
+    text-align: left;  
+}
+
+.side_block {
+    margin: 0%;
+}
+
+.menu {
+    background-color: green;
+    height: 100px;
+    width: 100%;
+}
+
+.table {
+    background-color: purple;
+    height: 200px;
+    width: 100%;
+}
