@@ -1,7 +1,7 @@
-export let score = 0;
-export let lines = 0;
-export let level = 0;
-export let play_field = [
+let score_player = 0;
+let lines_player = 0;
+let level_player = 1;
+let play_field_player = [
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
@@ -24,14 +24,14 @@ export let play_field = [
     [0,0,0,0,0,0,0,0,0,0],
 ]
 
-export let next_field = [
+let next_field_player = [
     [0,0,0,0,0],
     [0,0,0,0,0],
     [0,0,0,0,0],
     [0,0,0,0,0],
 ]
 
-export let active_piece = {
+let active_piece_player = {
     x: 0,
     y: 0,
     h: 4,
@@ -43,6 +43,15 @@ export let active_piece = {
         [1]
     ]
 }
-
-
-
+export function create_player() {
+    let player = {
+        score : score_player,
+        lines : lines_player,
+        level : level_player,
+        name : "Безымянный", 
+        play_field : play_field_player,
+        next_field : next_field_player,
+        active_piece : active_piece_player
+    }
+    return player;
+}

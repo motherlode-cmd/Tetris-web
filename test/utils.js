@@ -1,5 +1,4 @@
 
-
 export let figures = [
     [
         [1,1,1],
@@ -12,11 +11,20 @@ export let figures = [
     ],
     [
         [1,1],
+        [1,0],
+        [1,0]
+    ],
+    [
+        [1,1],
         [1,1]
     ],
     [
         [1,1,0],
         [0,1,1]
+    ],
+    [
+        [0,1,1],
+        [1,1,0]
     ],
     [        
         [1],
@@ -27,6 +35,19 @@ export let figures = [
 ]
 
 let num = 0;
+
+let step_score = 0;
+
+let step_lines = 0;
+
+export function get_score(player) {
+    player.score += step_score * player.level;
+    player.lines += step_lines;
+    if(player.lines % 3 === 0 && step_lines != 0) player.level++;
+    step_lines = 0;
+    step_score = 0;
+    
+}
 
 export function get_next(h, w) {   
     let x = Math.floor((w - figures[num][0].length) / 2);
@@ -47,7 +68,7 @@ export function get_next(h, w) {
 };
 
 
-export function rotate_piece(piece) {
+export function rotate_piece(field, piece) {
     let n_arr= []; // новый перевёрнутый массив
     let n_rows = piece.blocks[0].length;   // количество новых строк
     let n_cols = piece.blocks.length;      // количество новых столбцов
@@ -58,28 +79,47 @@ export function rotate_piece(piece) {
         }
         n_arr[x] = row_arr;
     }
-    let t = piece.w;
-    piece.w = piece.h;
-    piece.h = t;
-    piece.blocks = n_arr;
+    let new_piece = {
+        x: piece.x,
+        y: piece.y,
+        h: piece.w,
+        w: piece.h,
+        blocks: n_arr
+    }
+    if(!collisian(field, new_piece, 0, 0) && !border_x(field, new_piece, 0) && !border_y(field, new_piece, 0)) {
+        piece.blocks = n_arr;
+        piece.w = new_piece.w;
+        piece.h = new_piece.h;
+    }
 };
 
 
-function new_active(piece) {
-    piece.x = 0;
-    piece.y = 0;
+function new_active(piece, w) {
     piece.blocks = figures[num];
     piece.h = figures[num].length;
     piece.w = figures[num][0].length;
-    //num = (num + 1) % figures.length;
+    piece.x = Math.floor((w - figures[num][0].length) / 2);
+    piece.y = 0;
+    num = (num + 1) % figures.length;
+
 };
 
 function delete_full_line(field) {
-    for(let i = field.length - 1; i >= 0; i--) {
+    let highter_line = 0;
+    for(let i = 0; i < field.length; i++) {
         let sum = field[i].reduce((a, b) => a + b);
-        if(sum == field[i].length)
-            field[i] = field[i].map((v) => 0);  
+        if(sum == field[i].length) {
+            step_lines++;
+            highter_line = i;
+            field[i] = field[i].map((v) => 0);
+            for(let line = i; line >= 1; line--) {
+                field[line] = field[line - 1];
+            }
+            field[0] = field[0].map((v) => 0);
+            step_score += 10;
+        }  
     }
+    //delete
 }
 
 function add_figure(field, piece) {
@@ -89,7 +129,8 @@ function add_figure(field, piece) {
             field[i + piece.y][j + piece.x] = piece.blocks[i][j]
         }
     }
-    new_active(piece);
+    step_score += 4;
+    new_active(piece, field[0].length);
     delete_full_line(field);
 };
 
@@ -114,18 +155,27 @@ function collisian(field, piece, dx, dy) {
 
 
 export function move(field, piece, dx, dy) {
-    if(border_x(field, piece, dx))
+    step_score = 0;
+    if(border_x(field, piece, dx) || collisian(field, piece, dx, 0))
         return 0;
     if(border_y(field, piece, dy) || collisian(field, piece, dx, dy) ) {
         add_figure(field, piece);
-        new_active(piece);
-        console.log(num);
         return 0;
     }
     piece.y += dy;
     piece.x += dx;
-    console.log(dx, dy);
     return 1;
 };
 
+export function end_game(field, active_piece) {
+    return collisian(field, active_piece, 0, 0);
+}
+
+export function new_game(field, active_piece) {
+    num = 0;
+    for(let i = 0; i < field.length; i++)
+        field[i] = field[i].map((v) => 0);
+    new_active(active_piece, field[0].length)
+    num = (num + 1) % figures.length;
+}
 
