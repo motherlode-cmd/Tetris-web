@@ -117,7 +117,7 @@ start.addEventListener('click', start_game);
 const pause = document.querySelector('#pause');
 pause.addEventListener('click', pause_game);
 
-let username = "No";
+let username = "Anonim Pork";
 
 button_animation(pause);
 button_animation(start);
